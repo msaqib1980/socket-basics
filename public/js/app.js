@@ -1,5 +1,5 @@
-var name = getQueryVariable('name');
-var room = getQueryVariable('room');
+var name = getUrlParameter('name') || 'Anonyomus';
+var room = getUrlParameter('room');
 var socket = io();
 
 console.log(name + " wants to join " + room);
@@ -10,9 +10,9 @@ socket.on('connect', function(){
 });
     
 socket.on('message', function(message){
-    var momentTimestamp = moment.utc(message.timestamp);
+    var momentTimestamp = moment.utc(message.timestamp).local();
     
-    $('#incoming-message').append('<p>' + message.name + ': <strong>' + momentTimestamp.format('h:mm a') + ': </strong>' +  message.text + '</p>');
+    $('#incoming-message').append('<p><em>' + message.name + '</em>: <strong>' + momentTimestamp.format('h:mm a') + ': </strong><br>' +  message.text + '</p>');
     
 });
 
