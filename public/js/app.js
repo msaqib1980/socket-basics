@@ -1,11 +1,17 @@
 var name = getUrlParameter('name') || 'Anonyomus';
-var room = getUrlParameter('room');
+var room = getUrlParameter('room') || 'All';
 var socket = io();
 
 console.log(name + " wants to join " + room);
+ $('h1').text('Welcome to ' + room);
+
 
 socket.on('connect', function(){
-          console.log('Connected to socket.io server!');
+    console.log('Connected to socket.io server!');
+    socket.emit('joinRoom',{
+                name: name,
+                room: room
+    });
     
 });
     
@@ -14,6 +20,7 @@ socket.on('message', function(message){
     
     $('#incoming-message').append('<p><em>' + message.name + '</em>: <strong>' + momentTimestamp.format('h:mm a') + ': </strong><br>' +  message.text + '</p>');
     
+   
 });
 
 // Handle submitting of new message
@@ -24,6 +31,7 @@ $form.on('submit', function(event){
     
     socket.emit('message',{
         name: name,
+        room: room,
         text:  $('#message-input').val()
     });
     
@@ -31,3 +39,4 @@ $form.on('submit', function(event){
     
     
 });
+
